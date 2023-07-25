@@ -13,10 +13,6 @@ depends: [
   "ocaml"
   "dune" {>= "3.8"}
   "odoc" {with-doc}
-  "cohttp" {>= "2.5.6"}
-  "conduit-lwt" {>= "2.3.0"}
-  "cohttp-async" {>= "2.5.7"}
-  "cohttp-lwt-unix" {>= "2.5.6"}
 ]
 build: [
   ["dune" "subst"] {dev}

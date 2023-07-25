@@ -8,3 +8,9 @@ in let headers = Header.add_list (Header.init ()) [
 	("X-RapidAPI-Key", "d5e24caf94msh2bb98840b2ae31fp155012jsn616b1320df3b");
 	("X-RapidAPI-Host", "zillow56.p.rapidapi.com");
 ] in Client.call ~headers `GET uri >>= fun (res, body_stream) -> ()
+
+
+def zpids(location, view, n_houses)
+  -> list of zpids 
+
+def house_data(zpid) -> hashmap(strings : datastuff)

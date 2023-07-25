@@ -11,3 +11,6 @@ jobs:
       
       - name: Build project
         run: dune build
+      
+      - name: Test
+        run: dune test

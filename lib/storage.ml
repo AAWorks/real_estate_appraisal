@@ -14,7 +14,7 @@ module House = struct
     ; bathrooms: string
     ; price: int
     ; images: string list
-  } [@@deriving sexp]
+  } [@@deriving sexp, equal]
 
   let string_price t = Int.to_string (t.price) 
 

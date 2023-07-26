@@ -3,7 +3,7 @@ open! Scrape
 open! Async
 
 module House : sig
-    type t
+    type t [@@deriving sexp, equal]
 
     val string_price : t -> string
     val address : t -> string

@@ -1,3 +1,5 @@
+[@@@disable_unused_warnings]
+
 open! Core
 open! Scrape
 open! Async
@@ -35,6 +37,10 @@ module House = struct
 
 end
 
+let house_data ~location:_ ~view:_ ~n_houses:_ = assert false
+
+let photos ~zpid:_ = assert false
+
 let get_location_data ~location ~(houses_per_view:int) : string list list= 
   let water_data = house_data ~location ~view:"water" ~n_houses:houses_per_view in 
   let city_data = house_data ~location ~view:"city" ~n_houses:houses_per_view in 
@@ -42,17 +48,18 @@ let get_location_data ~location ~(houses_per_view:int) : string list list=
 ;;
 
 let store_houses ~locations ~(houses_per_view:int) : unit Deferred.t = 
-  Deferred.List.iter locations ~how:`Sequential ~f:(
+  let house_sexps = List.concat_map locations ~f:(
     fun location -> 
       let location_details = get_location_data ~location ~houses_per_view in 
-      Deferred.List.iter location_details ~how:`Sequential ~f:(
+      List.map location_details ~f:(
         fun house_details -> 
           let mapped_details = house_details |> List.zip_exn House.fields |> String.Map.of_alist_exn in
           let images: string list = photos ~zpid:(List.nth_exn house_details 0) in 
           let house = House.from_scraped_data ~mapped_details ~images in 
-          Writer.save_sexp "placeholder.txt" (House.sexp_of_t house)
+          House.sexp_of_t house
       )
   )
+  in Writer.save_sexps "resources/house_data.txt" house_sexps
 ;;
 
 (* Scheduler.go store_houses *)

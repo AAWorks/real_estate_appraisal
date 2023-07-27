@@ -43,16 +43,18 @@ let house_data ~(location:string) ~(view:string) ~(n_houses:int) =
 	let json = Jsonaf.of_string (Curl.get_exn link) in 
 	let results = json |> member_exn "results" |> list_exn in 
 	let results, _ = List.split_n results n_houses in
-	let final =
+		(* Results >> For key in range of n_houses >> 
+		 [zpid, city, state, bedroom, bathroom, price] *)
 	List.map results ~f:(fun house -> 
 	let bathroom = house |> member_exn "bathrooms" |> to_string_hum in 
 	let zpid = house |> member_exn "zpid" |> to_string_hum in 
 	let city = house |> member_exn "city" |> to_string_hum in 
 	let state = house |> member_exn "state" |> to_string_hum in 
 	let bedroom = house |> member_exn "bedrooms" |> to_string_hum in 
-	let price = house |> member_exn "price" |> to_string_hum in [zpid; city; state; bedroom; bathroom; price]) in
-	print_s[%message "" (final:string list list)]
+	let price = house |> member_exn "price" |> to_string_hum in [zpid; city; state; bedroom; bathroom; price])
 	;;
+
+let photos 
 
 (* [zpid, city, state, bedroom, bathroom, price] *)
 let json_practice ~(file_name:string) = 
@@ -69,78 +71,9 @@ let json_practice ~(file_name:string) =
 	let bedroom = house |> member_exn "bedrooms" |> to_string_hum in 
 	let price = house |> member_exn "price" |> to_string_hum in [zpid; city; state; bedroom; bathroom; price]) in
 	print_s[%message "" (final:string list list)];
-(* 
-
-	List.map results ~f:(fun house -> let bathroom = house |> member_exn "bathrooms" |> to_string_hum in 
-	let zpid = house |> member_exn "zpid" |> to_string_hum in 
-	let city = house |> member_exn "city" |> to_string_hum in 
-	let state = house |> member_exn "state" |> to_string_hum in 
-	let bedroom = house |> member_exn "bedrooms" |> to_string_hum in 
-	let price = house |> member_exn "price" |> to_string_hum in 
-	let final = [zpid; city; state; bedroom; bathroom; price]);
-
-	let bathroom = first |> member_exn "bathrooms" |> to_string_hum in 
-	let zpid = first |> member_exn "zpid" |> to_string_hum in 
-	let city = first |> member_exn "city" |> to_string_hum in 
-	let state = first |> member_exn "state" |> to_string_hum in 
-	let bedroom = first |> member_exn "bedrooms" |> to_string_hum in 
-	let price = first |> member_exn "price" |> to_string_hum in 
-	let final = [zpid; city; state; bedroom; bathroom; price] in 
-	print_s[%message "" (final:string list)]; *)
-	(* print_s [%message "" (first:t)]; *)
-	(* print_s [%message "" (results:t list)] *)
-	
 ;;
 
 
-(* let json_practice ~(file_name:string) =
-	try
-		let file = In_channel.read_all file_name in 
-		let json = Yojson.Safe.from_string file in
-		
-	with 
-	| Yojson.Json_error msg ->
-		print_endline msg 
-	;; *)
-
-(* let handle_json_input json_str =
-  try
-    let json = from_string json_str in
-    let json_object = Util.to_assoc json in
-    (* Do something with the JSON object here *)
-    print_endline "JSON parsing successful!";
-  with
-  | Yojson.Json_error msg ->
-      (* Handle JSON parsing errors *)
-      Printf.printf "JSON parsing error: %s\n" msg *)
-
-(* let uri = Uri.of_string link in
-let headers = Cohttp.Header.add_list (Cohttp.Header.init ()) [
-	("X-RapidAPI-Key", "89e8d18db2msh750cb1be8006c38p19c402jsne47214e05847");
-	("X-RapidAPI-Host", "zillow56.p.rapidapi.com");
-]  in 
-let response, body = Cohttp.Client.GET ~headers uri in 
-response  *)
-(* let headers = Cohttp.Header.init () in
-let response, body = Cohttp.  ~headers (Uri.of_string link) in  *)
-
-(* let uri = Uri.of_string link in 
-let headers = Header.add_list (Header.init ()) [
-	("X-RapidAPI-Key", "89e8d18db2msh750cb1be8006c38p19c402jsne47214e05847");
-	("X-RapidAPI-Host", "zillow56.p.rapidapi.com");
-] () *)
-
-
-(* Client.call ~headers `GET uri
->>= fun (res, body_stream) ->
-
-	let first = Cohttp_lwt.Body.to_string body_stream in 
-	first >>= fun (first ) ->
-	print_s[%message "testing" (first:string)];
-	print_s[%message "testing" (res:Response.t)];
-	return () *)
-	(* Results >> For key in range of n_houses >> 
-		 [zpid, city, state, bedroom, bathroom, price] *)
 
 
 

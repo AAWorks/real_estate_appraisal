@@ -54,7 +54,11 @@ let house_data ~(location:string) ~(view:string) ~(n_houses:int) =
 	let price = house |> member_exn "price" |> to_string_hum in [zpid; city; state; bedroom; bathroom; price])
 	;;
 
-let photos 
+let photos ~(zpid:string) =
+	let link = "https://zillow-data-v2.p.rapidapi.com/properties/detail/photos?zpid=2080998890" in 
+	let json = Jsonaf.of_string (Curl.get_exn link)
+
+;;
 
 (* [zpid, city, state, bedroom, bathroom, price] *)
 let json_practice ~(file_name:string) = 

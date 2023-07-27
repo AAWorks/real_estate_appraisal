@@ -4,13 +4,11 @@ open! Async
 open! Jsonaf.Export
 
 module Houses = struct
-  type t = House.t list
-  [@@derviing jsonaf, sexp] [@@jsonaf.allow_extra_fields]
+  type t = House.t list [@@deriving sexp] [@@jsonaf.allow_extra_fields]
 end
 
 module QuestionBank = struct
   type t = House.t list Deferred.t
-  [@@derviing jsonaf, sexp] [@@jsonaf.allow_extra_fields]
 
   let from_file ~filename : t =
     let%bind reader = Reader.open_file filename in

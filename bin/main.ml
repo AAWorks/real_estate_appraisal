@@ -7,8 +7,7 @@ let command =
   ~summary:"summary"
   (let%map_open.Command () = return ()
 in
-fun () ->
-Scrape.house_data ~location:"houston" ~view:"water";
+fun () -> Scrape.house_data ~location:"bethesda" ~view:" " ~n_houses:4 ;
 return ()
 )
 

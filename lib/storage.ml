@@ -16,9 +16,9 @@ module House = struct
     ; price : string
     ; images : string list
     }
-  [@@derviing jsonaf, sexp, equal] [@@jsonaf.allow_extra_fields]
+  [@@deriving sexp, equal] [@@jsonaf.allow_extra_fields]
 
-  let string_price t = Int.to_string t.price
+  let string_price t = "$" ^ t.price
   let address t = t.city ^ ", " ^ t.state
   let specs t = t.bedrooms ^ " bed, " ^ t.bathrooms ^ " bath"
 

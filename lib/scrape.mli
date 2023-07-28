@@ -8,5 +8,4 @@ val house_data
   -> n_houses:int
   -> string list list
 
-val photos : zpid:string -> unit
-val json_practice : file_name:string -> unit
+val photos : zpid:string -> string list

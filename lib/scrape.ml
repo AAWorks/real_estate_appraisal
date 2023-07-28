@@ -57,8 +57,6 @@ let house_data ~(location : string) ~(view : string) ~(n_houses : int) =
   let json = Jsonaf.of_string (Curl.get_exn link rapid) in
   let results = json |> member_exn "results" |> list_exn in
   let results, _ = List.split_n results n_houses in
-  (* Results >> For key in range of n_houses >> [zpid, city, state, bedroom,
-     bathroom, price] *)
   List.map results ~f:(fun house ->
     let bathroom = house |> member_exn "bathrooms" |> to_string_hum in
     let zpid = house |> member_exn "zpid" |> to_string_hum in
@@ -71,7 +69,7 @@ let house_data ~(location : string) ~(view : string) ~(n_houses : int) =
 
 let photos ~(zpid : string) =
   let link =
-    "https://zillow-data-v2.p.rapidapi.com/properties/detail/photos?zpid=2080998890"
+    "https://zillow-data-v2.p.rapidapi.com/properties/detail?zpid=" ^ zpid
   in
   let rapid =
     [ "X-RapidAPI-Key: 89e8d18db2msh750cb1be8006c38p19c402jsne47214e05847"
@@ -80,44 +78,13 @@ let photos ~(zpid : string) =
   in
   let file = Curl.get_exn link rapid in
   let json = Jsonaf.of_string file in
-  let photos = json |> member_exn "data" |> list_exn in
-  print_s [%message "" (photos : t list)];
-  let final =
-    List.map photos ~f:(fun key ->
-      let webp =
-        key |> member_exn "mixedSources" |> member_exn "webp" |> list_exn
-      in
-      let photo = List.nth_exn webp 3 in
-      photo |> member_exn "url" |> to_string_hum)
+  let photos =
+    json |> member_exn "data" |> member_exn "responsivePhotos" |> list_exn
   in
-  print_s [%message "" (final : string list)]
+  List.map photos ~f:(fun key ->
+    let webp =
+      key |> member_exn "mixedSources" |> member_exn "webp" |> list_exn
+    in
+    let chosen = List.nth_exn webp 3 in
+    chosen |> member_exn "url" |> to_string_hum)
 ;;
-
-(* [zpid, city, state, bedroom, bathroom, price] *)
-let json_practice ~(file_name : string) =
-  let file = In_channel.read_all file_name in
-  let json = Jsonaf.of_string file in
-  let results = json |> member_exn "results" |> list_exn in
-  let results, _ = List.split_n results 4 in
-  let final =
-    List.map results ~f:(fun house ->
-      let bathroom = house |> member_exn "bathrooms" |> to_string_hum in
-      let zpid = house |> member_exn "zpid" |> to_string_hum in
-      let city = house |> member_exn "city" |> to_string_hum in
-      let state = house |> member_exn "state" |> to_string_hum in
-      let bedroom = house |> member_exn "bedrooms" |> to_string_hum in
-      let price = house |> member_exn "price" |> to_string_hum in
-      [ zpid; city; state; bedroom; bathroom; price ])
-  in
-  print_s [%message "" (final : string list list)]
-;;
-
-(* let photos ~(zpid:String.t) = let uri = Uri.of_string
-   "https://zillow-data-v2.p.rapidapi.com/properties/detail/photos?zpid=" ^
-   zpid in let headers = Header.add_list (Header.init ()) [
-   ("X-RapidAPI-Key", "89e8d18db2msh750cb1be8006c38p19c402jsne47214e05847");
-   ("X-RapidAPI-Host", "zillow-data-v2.p.rapidapi.com"); ] in
-
-   Client.call ~headers `GET uri >>= fun (res, body_stream) -> (* Return
-   Photo Link *) (* Photos >> Each key >> Mixed Sources >> webp >> Key 3 >
-   url *) (* append url to list *) (* return list *) ;; *)

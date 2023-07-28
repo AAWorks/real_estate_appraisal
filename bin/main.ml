@@ -7,7 +7,7 @@ let command =
     ~summary:"summary"
     (let%map_open.Command () = return () in
      fun () ->
-       Scrape.photos ~zpid:"27855359";
+       Scrape.photos ~zpid:"37267777";
        return ())
 ;;
 
